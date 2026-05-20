@@ -1,14 +1,14 @@
-import { Toaster } from "@/components/ui/toaster"
+import { Toaster } from "./components/ui/toaster"
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import ScrollToTop from './components/ScrollToTop';
 
 // Komponen Halaman
-import Layout from '@/components/Layout';
-import Home from '@/pages/Home';
-import Collection from '@/pages/Collection';
-import ProductDetail from '@/pages/ProductDetail';
-import About from '@/pages/About';
-import Contact from '@/pages/Contact';
+import Layout from './components/Layout';
+import Home from './pages/Home';
+import Collection from './pages/Collection';
+import ProductDetail from './pages/ProductDetail';
+import About from './pages/About';
+import Contact from './pages/Contact';
 import PageNotFound from './lib/PageNotFound';
 
 function App() {

@@ -70,7 +70,7 @@ export default function Footer() {
             <div className="flex flex-col gap-3">
               {[
                 { label: 'Instagram', href: 'https://www.instagram.com/by.ycr?igsh=MXhycnd5YW13bnJhNw%3D%3D&utm_source=qr' },
-                { label: 'WhatsApp', href: 'https://wa.me/' },
+                { label: 'WhatsApp', href: 'https://wa.me/6285932215911' },
                 { label: 'TikTok', href: 'https://tiktok.com' },
               ].map(({ label, href }) => (
                 <a
