@@ -1,0 +1,251 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@layer base {
+     :root {
+        --background: 0 0% 98.8%;
+        --foreground: 0 0% 3.9%;
+        --card: 0 0% 98.8%;
+        --card-foreground: 0 0% 3.9%;
+        --popover: 0 0% 98.8%;
+        --popover-foreground: 0 0% 3.9%;
+        --primary: 0 0% 3.9%;
+        --primary-foreground: 0 0% 98.8%;
+        --secondary: 0 0% 94.9%;
+        --secondary-foreground: 0 0% 3.9%;
+        --muted: 0 0% 94.9%;
+        --muted-foreground: 0 0% 33.3%;
+        --accent: 0 0% 94.9%;
+        --accent-foreground: 0 0% 3.9%;
+        --destructive: 0 84.2% 60.2%;
+        --destructive-foreground: 0 0% 98%;
+        --border: 0 0% 89.8%;
+        --input: 0 0% 89.8%;
+        --ring: 0 0% 3.9%;
+        --radius: 0px;
+        --carbon: #0A0A0A;
+        --slate: #555555;
+        --optical-white: #FCFCFC;
+        --concrete: #F2F2F2;
+    }
+}
+
+@layer base {
+    * {
+        @apply border-border outline-ring/50;
+    }
+    body {
+        @apply bg-background text-foreground;
+        background-color: #FCFCFC;
+        color: #0A0A0A;
+        font-family: 'Inter', 'Helvetica Neue', sans-serif;
+        overflow-x: hidden;
+    }
+    h1,
+    h2,
+    h3 {
+        font-family: 'Bebas Neue', 'Impact', sans-serif;
+        letter-spacing: -0.05em;
+        text-transform: uppercase;
+    }
+}
+
+
+/* Scratch texture fixed background */
+
+.scratch-bg {
+    position: fixed;
+    inset: 0;
+    background-image: url('../assets/elemen6.PNG');
+    background-size: cover;
+    background-position: center;
+    opacity: 0.04;
+    pointer-events: none;
+    z-index: 1;
+    mix-blend-mode: multiply;
+}
+
+
+/* Ticker tape animation */
+
+@keyframes ticker {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-50%);
+    }
+}
+
+.ticker-tape {
+    animation: ticker 18s linear infinite;
+    white-space: nowrap;
+    display: flex;
+}
+
+
+/* Jitter button */
+
+@keyframes jitter {
+    0% {
+        transform: translate(0, 0) rotate(0deg);
+    }
+    20% {
+        transform: translate(-1px, 1px) rotate(-0.3deg);
+    }
+    40% {
+        transform: translate(1px, -1px) rotate(0.3deg);
+    }
+    60% {
+        transform: translate(-1px, -1px) rotate(0.1deg);
+    }
+    80% {
+        transform: translate(1px, 1px) rotate(-0.1deg);
+    }
+    100% {
+        transform: translate(0, 0) rotate(0deg);
+    }
+}
+
+.jitter:hover {
+    animation: jitter 0.3s ease-in-out infinite;
+}
+
+
+/* Stamp in animation */
+
+@keyframes stampIn {
+    0% {
+        transform: scale(1.05);
+        opacity: 0;
+        filter: blur(4px);
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+        filter: blur(0);
+    }
+}
+
+.stamp-in {
+    animation: stampIn 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+
+/* Ink-in page transition overlay */
+
+@keyframes inkExpand {
+    0% {
+        clip-path: circle(0% at 50% 50%);
+    }
+    100% {
+        clip-path: circle(150% at 50% 50%);
+    }
+}
+
+.ink-transition {
+    animation: inkExpand 0.6s cubic-bezier(0.77, 0, 0.175, 1) forwards;
+}
+
+
+/* Glitch text */
+
+@keyframes glitch {
+    0% {
+        text-shadow: 2px 0 #0A0A0A, -2px 0 #888;
+        clip-path: polygon(0 0, 100% 0, 100% 40%, 0 40%);
+    }
+    20% {
+        text-shadow: -2px 0 #0A0A0A, 2px 0 #888;
+    }
+    40% {
+        clip-path: polygon(0 60%, 100% 60%, 100% 100%, 0 100%);
+    }
+    60% {
+        text-shadow: 0 0 #0A0A0A;
+        clip-path: none;
+    }
+    100% {
+        text-shadow: none;
+        clip-path: none;
+    }
+}
+
+
+/* Nav magnetic underline */
+
+.nav-link {
+    position: relative;
+    transition: all 0.2s ease;
+}
+
+.nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: #0A0A0A;
+    transition: width 0.25s ease;
+}
+
+.nav-link:hover::after {
+    width: 100%;
+}
+
+
+/* Product card hover */
+
+.product-card:hover .brush-reveal {
+    opacity: 1;
+    transform: scaleX(1);
+}
+
+.brush-reveal {
+    opacity: 0;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: all 0.3s ease;
+}
+
+
+/* Masonry grid */
+
+.masonry-grid {
+    columns: 3;
+    column-gap: 16px;
+}
+
+.masonry-grid>* {
+    break-inside: avoid;
+    margin-bottom: 16px;
+}
+
+@media (max-width: 1024px) {
+    .masonry-grid {
+        columns: 2;
+    }
+}
+
+@media (max-width: 640px) {
+    .masonry-grid {
+        columns: 1;
+    }
+}
+
+
+/* Scrollbar */
+
+::-webkit-scrollbar {
+    width: 4px;
+}
+
+::-webkit-scrollbar-track {
+    background: #FCFCFC;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #0A0A0A;
+}

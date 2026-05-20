@@ -1,0 +1,196 @@
+import { useState, useEffect, useRef } from 'react';
+import { supabase } from '@/lib/supabaseClient';
+import ProductCard from '@/components/ProductCard';
+import { GrungeCorner } from '@/components/GrungeSection';
+
+// 1. PERBAIKAN IMPORT GAMBAR
+import INK from '../assets/elemen2.PNG';
+
+const CATEGORIES = ['all', 'tshirt', 'hoodie', 'jacket', 'pants', 'accessories'];
+
+export default function Collection() {
+  const [activeCategory, setActiveCategory] = useState('all');
+  const [products, setProducts] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const [catVisible, setCatVisible] = useState(true);
+  const lastScrollY = useRef(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentY = window.scrollY;
+
+      if (currentY < lastScrollY.current) {
+        setCatVisible(true);
+      } else if (currentY > lastScrollY.current && currentY > 100) {
+        setCatVisible(false);
+      }
+
+      lastScrollY.current = currentY;
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Fetch products
+  useEffect(() => {
+    async function fetchProducts() {
+      try {
+        setIsLoading(true);
+
+        const { data, error } = await supabase
+          .from('products')
+          .select('*')
+          .order('created_at', { ascending: false })
+          .limit(50);
+
+        if (error) throw error;
+
+        setProducts(data || []);
+      } catch (error) {
+        console.error('Gagal mengambil data koleksi:', error.message);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    fetchProducts();
+  }, []);
+
+  // Filter kategori
+  const filtered =
+    activeCategory === 'all'
+      ? products
+      : products.filter((p) => p.category === activeCategory);
+
+  return (
+    <div style={{ background: '#FCFCFC', minHeight: '100vh', paddingTop: '64px' }}>
+      {/* Header */}
+      <div
+        className="relative py-24 px-6 overflow-hidden"
+        style={{ background: '#F2F2F2' }}
+      >
+
+        <img
+          src={INK}
+          alt=""
+          aria-hidden
+          className="absolute right-0 top-0 w-80 h-80 object-cover pointer-events-none"
+          style={{ opacity: 0.07, mixBlendMode: 'multiply' }}
+        />
+
+        <div className="max-w-7xl mx-auto">
+          <p
+            className="text-xs tracking-[0.4em] uppercase mb-3"
+            style={{
+              color: '#888',
+              fontFamily: 'JetBrains Mono, monospace',
+            }}
+          >
+            — YCR Archive
+          </p>
+
+          <h1
+            className="text-7xl md:text-9xl"
+            style={{
+              fontFamily: 'Bebas Neue, Impact, sans-serif',
+              color: '#0A0A0A',
+              lineHeight: 0.85,
+            }}
+          >
+            Collection
+          </h1>
+        </div>
+      </div>
+
+      {/* 2. PERBAIKAN ANIMASI SCROLL PADA FILTER */}
+      <div
+        className="sticky top-16 z-30 px-6 py-4 flex gap-3 overflow-x-auto transition-transform duration-300"
+        style={{
+          background: '#FCFCFC',
+          borderBottom: '1px solid #E5E5E5',
+          transform: catVisible ? 'translateY(0)' : 'translateY(-100%)', // INI YANG MEMBUATNYA BERGERAK
+        }}
+      >
+        <div className="max-w-7xl mx-auto flex gap-3 w-full">
+          {CATEGORIES.map((cat) => (
+            <button
+              key={cat}
+              onClick={() => setActiveCategory(cat)}
+              className="px-5 py-2 text-xs tracking-widest uppercase flex-shrink-0 transition-all duration-200"
+              style={{
+                fontFamily: 'JetBrains Mono, monospace',
+                background: activeCategory === cat ? '#0A0A0A' : 'transparent',
+                color: activeCategory === cat ? '#FCFCFC' : '#555',
+                border: '1px solid',
+                borderColor: activeCategory === cat ? '#0A0A0A' : '#DDD',
+              }}
+            >
+              {cat === 'all'
+                ? 'All'
+                : cat
+                    .replace('tshirt', 'T-Shirt')
+                    .replace('hoodie', 'Hoodie')
+                    .replace('jacket', 'Jacket')
+                    .replace('pants', 'Pants')
+                    .replace('accessories', 'Acc.')}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Grid */}
+      <div className="max-w-7xl mx-auto px-6 py-16">
+        {isLoading ? (
+          /* 3. PERBAIKAN LAYOUT GRID (Loading State) */
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+            {[...Array(6)].map((_, i) => (
+              <div
+                key={i}
+                className="bg-gray-100 animate-pulse mb-4"
+                style={{
+                  height: '400px', // Disamakan tingginya
+                }}
+              />
+            ))}
+          </div>
+        ) : filtered.length === 0 ? (
+          <div className="text-center py-32">
+            <p
+              className="text-6xl mb-4"
+              style={{
+                fontFamily: 'Bebas Neue, Impact, sans-serif',
+                color: '#CCC',
+              }}
+            >
+              No Pieces Found
+            </p>
+
+            <p
+              className="text-sm tracking-wider"
+              style={{
+                color: '#888',
+                fontFamily: 'JetBrains Mono, monospace',
+              }}
+            >
+              Check back soon — new drops incoming.
+            </p>
+          </div>
+        ) : (
+          /* 3. PERBAIKAN LAYOUT GRID (Data Asli) */
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+            {filtered.map((product, i) => (
+              <ProductCard
+                key={product.id}
+                product={product}
+                index={i}
+              />
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
