@@ -8,7 +8,7 @@ import DIAGONAL from "../assets/elemen4.PNG";
 import BRUSH from "../assets/elemen3.PNG";
 
 const socials = [
-  { label: 'Instagram', handle: '@by.ycr', href: 'https://instagram.com', desc: 'Drops, editorials & culture' },
+  { label: 'Instagram', handle: '@ycr.official_', href: 'https://instagram.com', desc: 'Drops, editorials & culture' },
   { label: 'WhatsApp', handle: 'Order & Inquiries', href: 'https://wa.me/6285932215911', desc: 'Direct order & wholesale' },
   { label: 'TikTok', handle: '@ycr', href: 'https://tiktok.com', desc: 'Behind the scenes & lookbooks' },
 ];
