@@ -4,10 +4,11 @@ import { supabase } from '@/lib/supabaseClient';
 import ProductCard from '@/components/ProductCard';
 import { GrungeCorner } from '@/components/GrungeSection';
 
-import LOGO from '../assets/logo_hitam.PNG'; 
+import LOGO from '../assets/Business Card 1.png'; 
 import SCRATCH from '../assets/elemen6.PNG';
 import BRUSH_SLASH from '../assets/elemen4.PNG';
-import INK_SPLATTER from '../assets/elemen3.PNG';
+import INK_SPLATTER from '../assets/elemen2.PNG';
+
 
 export default function Home() {
   const heroRef = useRef(null);
