@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import LOGO_HITAM from '../assets/logo_hitam.png';
+import LOGO_HITAM from '../assets/logo_hitam.PNG';
 
 export default function Footer() {
   const tickerItems = ['YCR', '///', 'STREETWEAR', '///', 'EDGY', '///', 'CULTURE', '///'];
