@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { supabase } from '@/lib/supabaseClient'; 
+import PageTransition from '@/components/PageTransition';
 
 import DIAGONAL from "../assets/elemen2.PNG";
 import INK from "../assets/elemen3.PNG";

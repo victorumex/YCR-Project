@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabaseClient';
 import { GrungeCorner } from '@/components/GrungeSection';
+import PageTransition from '@/components/PageTransition';
 
 import INK from "../assets/elemen2.PNG";
 import DIAGONAL from "../assets/elemen4.PNG";
@@ -98,6 +99,7 @@ export default function Contact() {
   };
 
   return (
+    <PageTransition>
     <div
       style={{
         background: '#FCFCFC',
@@ -420,5 +422,6 @@ export default function Contact() {
         </div>
       </div>
     </div>
+    </PageTransition>
   );
 }

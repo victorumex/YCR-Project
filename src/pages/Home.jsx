@@ -1,24 +1,21 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase } from '@/lib/supabaseClient';
 import ProductCard from '@/components/ProductCard';
 import { GrungeCorner } from '@/components/GrungeSection';
+import PageTransition from '@/components/PageTransition';
 
-import LOGO from '../assets/Business Card (2).png'; 
-import SCRATCH from '../assets/elemen6.PNG';
+// --- IMPORT LOGO & ASSETS ---
+import LOGO_MAIN from '../assets/Business Card (2).png'; 
+
+// Import tekstur
 import BRUSH_SLASH from '../assets/elemen4.PNG';
-import INK_SPLATTER from '../assets/elemen2.PNG';
-
 
 export default function Home() {
-  const heroRef = useRef(null);
-  const ink1Ref = useRef(null);
-  const ink2Ref = useRef(null);
-  
   const [featured, setFeatured] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  // 1. MENGAMBIL DATA DARI SUPABASE (Lebih aman dari useQuery)
+  // MENGAMBIL DATA DARI SUPABASE
   useEffect(() => {
     async function fetchFeatured() {
       try {
@@ -42,74 +39,35 @@ export default function Home() {
     fetchFeatured();
   }, []);
 
-  // 2. EFEK PARALLAX ANTI-LAG (Menggunakan requestAnimationFrame)
-  useEffect(() => {
-    let animationFrameId;
-    const handleMouse = (e) => {
-      if (heroRef.current) {
-        const rect = heroRef.current.getBoundingClientRect();
-        const x = ((e.clientX - rect.left) / rect.width - 0.5) * 30;
-        const y = ((e.clientY - rect.top) / rect.height - 0.5) * 20;
-
-        animationFrameId = requestAnimationFrame(() => {
-          if (ink1Ref.current) {
-            ink1Ref.current.style.transform = `translate(${x * 0.8}px, ${y * 0.8}px)`;
-          }
-          if (ink2Ref.current) {
-            ink2Ref.current.style.transform = `translate(${-x * 0.6}px, ${-y * 0.6}px) scaleX(-1)`;
-          }
-        });
-      }
-    };
-    
-    const el = heroRef.current;
-    if (el) el.addEventListener('mousemove', handleMouse);
-    return () => { 
-      if (el) el.removeEventListener('mousemove', handleMouse); 
-      cancelAnimationFrame(animationFrameId);
-    };
-  }, []);
-
-  
   return (
+    <PageTransition>
     <div>
-        {/* HERO (Ditambahkan min-h-[700px] agar tidak overlap) */}
+      {/* HERO SECTION */}
       <section
-        ref={heroRef}
         className="relative min-h-[700px] md:min-h-screen flex flex-col items-center justify-center overflow-hidden pb-28"
         style={{ background: '#FCFCFC' }}
       >
-        {/* Ink splatters (Ditambahkan Ref untuk animasi anti-lag) */}
+        {/* BACKGROUND YCR BESAR (STATIS) */}
         <img
-          ref={ink1Ref}
-          src={INK_SPLATTER}
+          src={LOGO_MAIN}
           alt=""
           aria-hidden
           className="absolute pointer-events-none select-none"
-          style={{ width: '60%', left: '-10%', top: '10%', opacity: 0.07, mixBlendMode: 'multiply' }}
-        />
-        <img
-          ref={ink2Ref}
-          src={INK_SPLATTER}
-          alt=""
-          aria-hidden
-          className="absolute pointer-events-none select-none"
-          style={{ width: '50%', right: '-8%', bottom: '15%', opacity: 0.06, mixBlendMode: 'multiply' }}
-        />
-
-        {/* Scratch overlay */}
-        <img
-          src={SCRATCH}
-          alt=""
-          aria-hidden
-          className="absolute inset-0 w-full h-full object-cover pointer-events-none select-none"
-          style={{ opacity: 0.05, mixBlendMode: 'multiply' }}
+          style={{ 
+            top: '50%', 
+            left: '50%', 
+            transform: 'translate(-50%, -50%)', 
+            width: '140vw', // Membuatnya sangat besar melebihi layar
+            minWidth: '1200px', // Batas minimal ukuran agar tidak terlalu kecil di HP
+            opacity: 0.05, // Transparansi yang sama dengan background sebelumnya
+          }}
         />
 
-        {/* Logo + CTA */}
+
+        {/* Logo Utama (Tengah) + CTA */}
         <div className="relative z-10 flex flex-col items-center px-6 text-center mt-12">
           <img
-            src={LOGO}
+            src={LOGO_MAIN}
             alt="YCR"
             className="stamp-in"
             style={{ width: 'min(500px, 80vw)', maxWidth: '500px', marginBottom: '2rem' }}
@@ -133,11 +91,10 @@ export default function Home() {
               className="px-10 py-4 text-base tracking-widest uppercase border-2 transition-all duration-300"
               style={{ 
                 borderColor: '#0A0A0A', 
-                color: '#0A0A0A', // Warna teks default (Hitam)
+                color: '#0A0A0A',
                 fontFamily: 'JetBrains Mono, monospace', 
                 display: 'inline-block' 
               }}
-              // Tailwind akan mengubah bg jadi hitam dan teks jadi putih saat di-hover
               onMouseEnter={(e) => {
                 e.target.style.backgroundColor = '#0A0A0A';
                 e.target.style.color = '#FCFCFC';
@@ -195,7 +152,6 @@ export default function Home() {
               </Link>
             </div>
 
-            {/* 3. GRID RAPI (Menggantikan masonry-grid) */}
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
               {featured.map((product, i) => (
                 <ProductCard key={product.id} product={product} index={i} />
@@ -208,7 +164,7 @@ export default function Home() {
       {/* MANIFESTO SECTION */}
       <section className="relative py-32 px-6 overflow-hidden" style={{ background: '#0A0A0A' }}>
         <img
-          src={INK_SPLATTER}
+          src={LOGO_MAIN}
           alt=""
           aria-hidden
           className="absolute inset-0 w-full h-full object-cover pointer-events-none select-none"
@@ -224,7 +180,8 @@ export default function Home() {
           <p className="text-base md:text-lg max-w-xl mx-auto mb-12" style={{ color: '#888', fontFamily: 'Inter, sans-serif', lineHeight: 1.8 }}>
             YCR was born on the streets, forged in concrete and ink. Every piece is a statement against the ordinary.
           </p>
-          <img src={LOGO} alt="" aria-hidden className="w-full max-w-md mx-auto mb-8 opacity-30" style={{ filter: 'invert(1)' }} />
+          
+          
           <Link
             to="/about"
             className="jitter inline-block px-12 py-4 tracking-widest uppercase text-sm"
@@ -235,5 +192,6 @@ export default function Home() {
         </div>
       </section>
     </div>
+    </PageTransition>
   );
 }

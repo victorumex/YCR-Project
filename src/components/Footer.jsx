@@ -1,30 +1,28 @@
 import { Link } from 'react-router-dom';
-
-const LOGO = 'https://media.base44.com/images/public/user_69e5c2fc01d922c7d21908c9/5b323aee6_IMG_2827.png';
-const BRUSH_SLASH = 'https://media.base44.com/images/public/user_69e5c2fc01d922c7d21908c9/0b82b9c11_1.png';
+import LOGO_HITAM from '../assets/logo_hitam.png';
 
 export default function Footer() {
   const tickerItems = ['YCR', '///', 'STREETWEAR', '///', 'EDGY', '///', 'CULTURE', '///'];
+  const repeatedItems = [...tickerItems, ...tickerItems, ...tickerItems, ...tickerItems, ...tickerItems, ...tickerItems];
+
+  const collectionTabs = [
+    { key: 'all', label: 'All' },
+    { key: 'tshirt', label: 'T-Shirt' },
+    { key: 'hoodie', label: 'Hoodie' },
+    { key: 'jacket', label: 'Jacket' },
+    { key: 'pants', label: 'Pants' },
+    { key: 'accessories', label: 'Accessories' },
+  ];
 
   return (
     <footer style={{ background: '#0A0A0A', color: '#FCFCFC' }}>
-      {/* Brush slash top border */}
-      <div className="relative h-12 overflow-hidden" style={{ background: '#FCFCFC' }}>
-        <img
-          src={BRUSH_SLASH}
-          alt=""
-          className="absolute bottom-0 left-0 w-full h-full object-cover"
-          style={{ filter: 'invert(0)', mixBlendMode: 'multiply' }}
-        />
-      </div>
-
       {/* Ticker tape */}
-      <div className="overflow-hidden py-4 border-b" style={{ borderColor: '#222' }}>
-        <div className="ticker-tape">
-          {[...tickerItems, ...tickerItems, ...tickerItems, ...tickerItems].map((item, i) => (
+      <div className="overflow-hidden py-4 border-b flex" style={{ borderColor: '#222' }}>
+        <div className="ticker-tape flex whitespace-nowrap w-max">
+          {repeatedItems.map((item, i) => (
             <span
               key={i}
-              className="px-6 text-xl tracking-widest"
+              className="px-6 text-xl tracking-widest shrink-0"
               style={{ fontFamily: 'Bebas Neue, Impact, sans-serif', color: '#FCFCFC' }}
             >
               {item}
@@ -34,25 +32,42 @@ export default function Footer() {
       </div>
 
       <div className="max-w-7xl mx-auto px-6 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-          {/* Logo & tagline */}
-          <div>
-            <img src={LOGO} alt="YCR" className="h-12 w-auto mb-4" style={{ filter: 'invert(1)' }} />
+        {/* 4 kolom rata menyebar (justify-between) */}
+        <div className="flex flex-col md:flex-row justify-between gap-12 md:gap-6 lg:gap-8">
+          
+          {/* Logo & tagline – rata kiri (eksplisit text-left) */}
+          <div className="w-full md:w-1/4 text-left">
+            <img src={LOGO_HITAM} alt="YCR" className="h-12 w-auto mb-4" style={{ filter: 'invert(1)' }} />
             <p className="text-sm leading-relaxed" style={{ color: '#888', fontFamily: 'Inter, sans-serif' }}>
               Raw. Unapologetic. Streetwear forged in the underground.
             </p>
           </div>
 
-          {/* Navigation */}
-          <div>
+          {/* Navigate – rata kanan */}
+          <div className="w-full md:w-1/4 md:text-right">
             <h4 className="text-lg mb-6 tracking-wider" style={{ fontFamily: 'Bebas Neue, Impact, sans-serif', color: '#FCFCFC' }}>
               Navigate
             </h4>
-            <div className="flex flex-col gap-3">
-              {[['/', 'Home'], ['/collection', 'Collection'], ['/about', 'About'], ['/contact', 'Contact']].map(([to, label]) => (
+            <div className="flex flex-col md:items-end gap-3">
+              <Link to="/" className="text-sm tracking-widest uppercase hover:text-white transition-colors"
+                style={{ color: '#888', fontFamily: 'Inter, sans-serif' }}>Home</Link>
+              <Link to="/about" className="text-sm tracking-widest uppercase hover:text-white transition-colors"
+                style={{ color: '#888', fontFamily: 'Inter, sans-serif' }}>About</Link>
+              <Link to="/contact" className="text-sm tracking-widest uppercase hover:text-white transition-colors"
+                style={{ color: '#888', fontFamily: 'Inter, sans-serif' }}>Contact</Link>
+            </div>
+          </div>
+
+          {/* Collection – rata kanan */}
+          <div className="w-full md:w-1/4 md:text-right">
+            <h4 className="text-lg mb-6 tracking-wider" style={{ fontFamily: 'Bebas Neue, Impact, sans-serif', color: '#FCFCFC' }}>
+              Collection
+            </h4>
+            <div className="flex flex-col md:items-end gap-3">
+              {collectionTabs.map(({ key, label }) => (
                 <Link
-                  key={to}
-                  to={to}
+                  key={key}
+                  to={`/collection?category=${key}`}
                   className="text-sm tracking-widest uppercase hover:text-white transition-colors"
                   style={{ color: '#888', fontFamily: 'Inter, sans-serif' }}
                 >
@@ -62,12 +77,12 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Socials */}
-          <div>
+          {/* Socials – rata kanan (seperti semula) */}
+          <div className="w-full md:w-1/4 md:text-right">
             <h4 className="text-lg mb-6 tracking-wider" style={{ fontFamily: 'Bebas Neue, Impact, sans-serif', color: '#FCFCFC' }}>
               Follow The Movement
             </h4>
-            <div className="flex flex-col gap-3">
+            <div className="flex flex-col md:items-end gap-3">
               {[
                 { label: 'Instagram', href: 'https://www.instagram.com/ycr.official_?igsh=NXgxc2Y5dzE3eWE=' },
                 { label: 'WhatsApp', href: 'https://wa.me/6285932215911' },
@@ -88,6 +103,7 @@ export default function Footer() {
           </div>
         </div>
 
+        {/* Copyright */}
         <div className="mt-16 pt-6 flex flex-col md:flex-row justify-between items-center gap-4" style={{ borderTop: '1px solid #222' }}>
           <p className="text-xs tracking-widest" style={{ color: '#444', fontFamily: 'JetBrains Mono, monospace' }}>
             © 2026 YCR. ALL RIGHTS RESERVED.

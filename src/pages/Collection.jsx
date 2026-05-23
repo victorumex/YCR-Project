@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { supabase } from '@/lib/supabaseClient';
 import ProductCard from '@/components/ProductCard';
-import { GrungeCorner } from '@/components/GrungeSection';
+import PageTransition from '@/components/PageTransition';
 import INK from '../assets/elemen2.PNG';
 
 const CATEGORIES = ['all', 'tshirt', 'hoodie', 'jacket', 'pants', 'accessories'];
@@ -68,6 +68,7 @@ export default function Collection() {
   });
 
   return (
+    <PageTransition>
     <div style={{ background: '#FCFCFC', minHeight: '100vh', paddingTop: '64px' }}>
       {/* Header */}
       <div className="relative py-24 px-6 overflow-hidden" style={{ background: '#F2F2F2' }}>
@@ -160,5 +161,6 @@ export default function Collection() {
         )}
       </div>
     </div>
+    </PageTransition>
   );
 }
