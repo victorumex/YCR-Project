@@ -3,8 +3,8 @@ import { Link } from 'react-router-dom';
 import { motion, useInView } from 'framer-motion';
 import PageTransition from '@/components/PageTransition';
 
-import LOGO from '../assets/logo_hitam.png';
-import LOGO2 from '../assets/logo_putih.png';
+import LOGO from '../assets/logo_hitam.PNG';
+import LOGO2 from '../assets/logo_putih.PNG';
 import LOGO_MAIN from '../assets/Business Card (2).png';
 import BRUSH from '../assets/elemen3.PNG';
 
