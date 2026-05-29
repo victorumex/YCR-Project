@@ -2,33 +2,42 @@ import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, useInView } from 'framer-motion';
 
-// Tambahkan prop 'isFeatured' dengan default false
 export default function ProductCard({ product, isFeatured = false }) {
   const ref = useRef(null);
   const isInView = useInView(ref, { amount: 0.3 }); 
-  const [hideY, setHideY] = useState(100);
   
-  // State untuk mengontrol indeks gambar (Slider)
+  // Menyimpan arah offset (X untuk featured horizontal, Y untuk collection vertikal)
+  const [hideOffset, setHideOffset] = useState(100);
+  
   const [imgIndex, setImgIndex] = useState(0);
 
   useEffect(() => {
     if (!ref.current) return;
     const rect = ref.current.getBoundingClientRect();
-    const windowCenter = window.innerHeight / 2;
-
-    if (rect.top < windowCenter) {
-      setHideY(-100);
+    
+    // LOGIKA ARAH ANIMASI CERDAS
+    if (isFeatured) {
+      // Jika Featured (Slider Horizontal): Terbit/Terserap ke Kiri & Kanan
+      const windowCenterX = window.innerWidth / 2;
+      setHideOffset(rect.left < windowCenterX ? -100 : 100);
     } else {
-      setHideY(100);
+      // Jika Collection (Grid Vertikal): Terbit/Terserap ke Atas & Bawah
+      const windowCenterY = window.innerHeight / 2;
+      setHideOffset(rect.top < windowCenterY ? -100 : 100);
     }
-  }, [isInView]);
+  }, [isInView, isFeatured]);
 
   if (!product) return null;
 
-  // Membaca array gambar dari database
-  const images = Array.isArray(product.images) && product.images.length > 0
-    ? product.images
-    : (product.image_url ? [product.image_url] : []);
+  // LOGIKA BACA GAMBAR CERDAS (Memperbaiki error 'NO IMAGE')
+  let images = [];
+  if (Array.isArray(product.images) && product.images.length > 0) {
+    images = product.images; // Jika format Supabase adalah text[] (Array)
+  } else if (typeof product.images === 'string' && product.images.trim() !== '') {
+    images = [product.images]; // Jika format Supabase hanya text biasa (seperti di screenshot Anda)
+  } else if (product.image_url) {
+    images = [product.image_url]; // Fallback untuk tabel collection
+  }
 
   const nextImage = (e) => {
     e.preventDefault(); 
@@ -43,10 +52,17 @@ export default function ProductCard({ product, isFeatured = false }) {
   return (
     <motion.div
       ref={ref}
-      initial={{ opacity: 0, y: 100, scale: 0.95 }} 
+      // Posisi Awal: Jika Featured masuk dari sumbu X, jika tidak masuk dari sumbu Y
+      initial={{ 
+        opacity: 0, 
+        x: isFeatured ? 100 : 0, 
+        y: isFeatured ? 0 : 100, 
+        scale: 0.95 
+      }} 
       animate={{
         opacity: isInView ? 1 : 0,
-        y: isInView ? 0 : hideY,
+        x: isInView ? 0 : (isFeatured ? hideOffset : 0),
+        y: isInView ? 0 : (isFeatured ? 0 : hideOffset),
         scale: isInView ? 1 : 0.95 
       }}
       transition={{
@@ -57,7 +73,7 @@ export default function ProductCard({ product, isFeatured = false }) {
       }}
       className="group"
     >
-      <Link to={`/product/${product.id}`} className="block">
+      <Link to={isFeatured ? `/collection?set=${product.id}` : `/product/${product.id}`} className="block">
         
         {/* WADAH GAMBAR */}
         <div className="relative aspect-[3/4] overflow-hidden bg-[#E5E5E5] mb-4">
@@ -74,7 +90,6 @@ export default function ProductCard({ product, isFeatured = false }) {
                 }}
               />
 
-              {/* TOMBOL SLIDER JIKA GAMBAR > 1 */}
               {images.length > 1 && (
                 <div className="absolute inset-0 flex items-center justify-between px-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                   <button onClick={prevImage} className="bg-black/50 text-white w-8 h-8 flex items-center justify-center rounded-full hover:bg-black transition-colors z-10 backdrop-blur-sm">←</button>
@@ -82,7 +97,6 @@ export default function ProductCard({ product, isFeatured = false }) {
                 </div>
               )}
 
-              {/* INDIKATOR TITIK (Dots) */}
               {images.length > 1 && (
                 <div className="absolute bottom-3 left-0 right-0 flex justify-center gap-1.5 z-10">
                   {images.map((_, i) => (
@@ -110,19 +124,16 @@ export default function ProductCard({ product, isFeatured = false }) {
         {/* TEKS DETAIL PRODUK */}
         <div className="flex justify-between items-start mt-4">
           <div>
-            {/* JIKA BUKAN FEATURED, TAMPILKAN KATEGORI */}
             {!isFeatured && (
               <p className="text-xs tracking-widest uppercase mb-1" style={{ color: '#888', fontFamily: 'JetBrains Mono, monospace' }}>
                 {product.category || 'Uncategorized'}
               </p>
             )}
-
             <h3 className="text-lg uppercase" style={{ fontFamily: 'Bebas Neue, Impact, sans-serif', color: '#0A0A0A' }}>
               {product.name || 'Unnamed Product'}
             </h3>
           </div>
 
-          {/* JIKA BUKAN FEATURED, TAMPILKAN HARGA */}
           {!isFeatured && (
             <p className="text-sm" style={{ fontFamily: 'JetBrains Mono, monospace', color: '#0A0A0A' }}>
               IDR {product.price ? product.price.toLocaleString('id-ID') : '0'}

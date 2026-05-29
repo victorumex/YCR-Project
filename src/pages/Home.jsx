@@ -117,23 +117,23 @@ export default function Home() {
         </div>
       </section>
 
-      {/* FEATURED PRODUCTS */}
+{/* FEATURED PRODUCTS */}
       {isLoading ? (
         <div className="text-center py-24" style={{ fontFamily: 'JetBrains Mono, monospace' }}>
           Loading Collective Files...
         </div>
       ) : featured.length > 0 && (
-        <section className="relative py-24 px-6" style={{ background: '#F2F2F2' }}>
+        <section className="relative py-24 pl-6 md:pl-0" style={{ background: '#F2F2F2' }}>
           <GrungeCorner
             className="absolute top-0 left-0 w-64 h-64"
             opacity={0.12}
           />
 
-          <div className="max-w-7xl mx-auto">
-            <div className="flex items-end justify-between mb-12">
+          <div className="max-w-7xl mx-auto md:px-6">
+            <div className="flex items-end justify-between mb-12 pr-6 md:pr-0">
               <div>
                 <p className="text-xs tracking-[0.4em] uppercase mb-2" style={{ color: '#888', fontFamily: 'JetBrains Mono, monospace' }}>
-                  — New Drop
+                  — Drop 1 Lookbook
                 </p>
                 <h2
                   className="text-6xl md:text-8xl"
@@ -141,6 +141,10 @@ export default function Home() {
                 >
                   Featured
                 </h2>
+                {/* INDIKATOR SWIPE DITAMBAHKAN DI SINI */}
+                <p className="text-xs tracking-[0.3em] uppercase mt-4 animate-pulse" style={{ color: '#555', fontFamily: 'JetBrains Mono, monospace' }}>
+                  ← Swipe to explore →
+                </p>
               </div>
               <Link
                 to="/collection"
@@ -151,9 +155,27 @@ export default function Home() {
               </Link>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
-              {featured.map((product, i) => (
-                <ProductCard key={product.id} product={product} index={i} isFeatured={true} />
+            {/* HORIZONTAL SLIDER CONTAINER (UBAHAN UTAMA) */}
+            <div 
+              className="flex overflow-x-auto gap-6 pb-8 snap-x snap-mandatory pr-6 md:pr-0"
+              style={{ 
+                scrollbarWidth: 'none', /* Sembunyikan scrollbar di Firefox */
+                msOverflowStyle: 'none' /* Sembunyikan scrollbar di IE/Edge */
+              }}
+            >
+              {/* CSS khusus untuk menyembunyikan scrollbar di Chrome/Safari/Webkit */}
+              <style>{`
+                div::-webkit-scrollbar { display: none; }
+              `}</style>
+
+              {featured.map((product) => (
+                // WADAH KARTU: Menentukan ukuran lebar kartu agar tidak memanjang penuhi layar
+                <div 
+                  key={product.id} 
+                  className="flex-none w-[85vw] sm:w-[340px] md:w-[400px] snap-center"
+                >
+                  <ProductCard product={product} isFeatured={true} />
+                </div>
               ))}
             </div>
           </div>
