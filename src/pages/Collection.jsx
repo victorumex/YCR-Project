@@ -2,8 +2,8 @@ import { useState, useEffect, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { supabase } from '@/lib/supabaseClient';
 import ProductCard from '@/components/ProductCard';
-import PageTransition from '@/components/PageTransition'; // Komponen animasi halaman
-import INK from '../assets/elemen2.PNG';
+import PageTransition from '@/components/PageTransition'; 
+import LOGO_MAIN from '../assets/Business Card (2).png'; // Mengganti INK
 
 const CATEGORIES = ['all', 'tshirt', 'hoodie', 'jacket', 'pants', 'accessories'];
 
@@ -64,14 +64,26 @@ export default function Collection() {
   });
 
   return (
-    // 1. MENGGUNAKAN PAGE TRANSITION
     <PageTransition>
       <div style={{ background: '#FCFCFC', minHeight: '100vh', paddingTop: '64px' }}>
         
-        {/* Header */}
+        {/* Header (TERANG) */}
         <div className="relative py-24 px-6 overflow-hidden" style={{ background: '#F2F2F2' }}>
-          <img src={INK} alt="" aria-hidden className="absolute right-0 top-0 w-80 h-80 object-cover pointer-events-none" style={{ opacity: 0.07, mixBlendMode: 'multiply' }} />
-          <div className="max-w-7xl mx-auto">
+          <img 
+            src={LOGO_MAIN} 
+            alt="" 
+            aria-hidden 
+            className="absolute pointer-events-none select-none" 
+            style={{ 
+              top: '50%', 
+              left: '75%', 
+              transform: 'translate(-50%, -50%)', 
+              width: '180vw', 
+              minWidth: '1500px', 
+              opacity: 0.07
+            }} 
+          />
+          <div className="max-w-7xl mx-auto relative z-10">
             <p className="text-xs tracking-[0.4em] uppercase mb-3" style={{ color: '#888', fontFamily: 'JetBrains Mono, monospace' }}>
               — YCR Archive
             </p>
@@ -81,7 +93,7 @@ export default function Collection() {
           </div>
         </div>
 
-        {/* 2. FILTER MENU DIPERBAIKI: Background w-full, overflow di dalam */}
+        {/* Filter Menu */}
         <div
           className="sticky top-16 z-30 w-full transition-transform duration-300"
           style={{
@@ -115,7 +127,6 @@ export default function Collection() {
         {/* Grid Area */}
         <div className="max-w-7xl mx-auto px-6 py-16">
           
-          {/* Sort Dropdown */}
           <div className="flex justify-between items-center mb-12 border-b pb-4" style={{ borderColor: '#E5E5E5' }}>
             <p className="text-xs" style={{ fontFamily: 'JetBrains Mono, monospace', color: '#888' }}>
               SHOWING {sortedAndFiltered.length} PRODUCTS
@@ -152,9 +163,8 @@ export default function Collection() {
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
-              {sortedAndFiltered.map((product, i) => (
-                // 3. EFEK TERBIT otomatis bekerja di sini karena kita sudah edit komponen ProductCard sebelumnya
-                <ProductCard key={product.id} product={product} index={i} />
+              {sortedAndFiltered.map((product) => (
+                <ProductCard key={product.id} product={product} />
               ))}
             </div>
           )}

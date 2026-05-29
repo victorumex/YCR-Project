@@ -1,24 +1,51 @@
+import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion, useInView } from 'framer-motion';
 
-// --- Definisi Kurva Animasi (Sama seperti di About.jsx) ---
-const snapTransition = {
-  duration: 0.6,
-  ease: [0.19, 1, 0.22, 1], // easeOutExpo
-};
+export default function ProductCard({ product }) {
+  // Ref untuk mendeteksi posisi elemen
+  const ref = useRef(null);
+  
+  // TRIGGER: Animasi berjalan jika minimal 30% elemen terlihat.
+  const isInView = useInView(ref, { amount: 0.3 }); 
+  
+  // State untuk arah tarikan (jarak dikurangi jadi 100 agar gerakannya lebih santai dan tidak ngotot)
+  const [hideY, setHideY] = useState(100);
 
-export default function ProductCard({ product, index }) {
-  // Jika karena suatu alasan data product kosong, kembalikan null agar tidak error
+  useEffect(() => {
+    if (!ref.current) return;
+    const rect = ref.current.getBoundingClientRect();
+    const windowCenter = window.innerHeight / 2;
+
+    // LOGIKA TARIKAN CERDAS:
+    if (rect.top < windowCenter) {
+      setHideY(-100);
+    } else {
+      setHideY(100);
+    }
+  }, [isInView]);
+
   if (!product) return null;
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-50px" }}
-      transition={{ 
-        ...snapTransition, 
-        delay: index * 0.08 // Stagger effect
+      ref={ref}
+      // Scale dibuat 0.95 agar efek membesarnya tipis dan terlihat mahal
+      initial={{ opacity: 0, y: 100, scale: 0.95 }} 
+      animate={{
+        opacity: isInView ? 1 : 0,
+        y: isInView ? 0 : hideY,
+        scale: isInView ? 1 : 0.95 
+      }}
+      transition={{
+        // PERBAIKAN: Saat muncul diperlambat menjadi 1.4 detik agar "super smooth"
+        // Saat keluar tetap 0.4 detik agar cepat memberi ruang
+        duration: isInView ? 1.4 : 0.4, 
+        
+        // Kurva Animasi
+        ease: isInView 
+          ? [0.25, 1, 0.35, 1] // Kurva melambat di akhir yang sangat lembut (Decelerate)
+          : [0.55, 0.05, 0.68, 0.19] // Tetap menghentak saat diserap keluar
       }}
       className="group"
     >
@@ -30,16 +57,14 @@ export default function ProductCard({ product, index }) {
             <img
               src={product.image_url}
               alt={product.name || 'YCR Product'}
-              className="w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-105"
+              className="w-full h-full object-cover object-center transition-transform duration-1000 ease-out group-hover:scale-105"
               style={{ filter: 'grayscale(15%) contrast(1.05)' }}
-              // Fallback jika URL gambar dari Supabase mati/error saat diload
               onError={(e) => {
                 e.target.onerror = null; 
                 e.target.src = 'https://via.placeholder.com/600x800/E5E5E5/888888?text=NO+IMAGE';
               }}
             />
           ) : (
-            // Jika kolom image_url di Supabase kosong
             <div className="w-full h-full flex items-center justify-center text-[#888] font-mono text-xs tracking-widest">
               NO IMAGE
             </div>

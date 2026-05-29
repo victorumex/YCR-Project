@@ -3,7 +3,7 @@ import { supabase } from '@/lib/supabaseClient';
 import { GrungeCorner } from '@/components/GrungeSection';
 import PageTransition from '@/components/PageTransition';
 
-import INK from "../assets/elemen2.PNG";
+import LOGO_MAIN from '../assets/Business Card (2).png'; // Mengganti INK
 import DIAGONAL from "../assets/elemen4.PNG";
 import BRUSH from "../assets/elemen3.PNG";
 
@@ -107,7 +107,7 @@ export default function Contact() {
         paddingTop: '64px',
       }}
     >
-      {/* HEADER */}
+      {/* HEADER (TERANG) */}
       <div
         className="relative py-24 px-6 overflow-hidden"
         style={{ background: '#F2F2F2' }}
@@ -117,18 +117,22 @@ export default function Contact() {
           opacity={0.15}
         />
 
-        <img
-          src={INK}
-          alt=""
-          aria-hidden
-          className="absolute right-0 bottom-0 w-80 pointer-events-none"
-          style={{
-            opacity: 0.07,
-            mixBlendMode: 'multiply',
-          }}
+        <img 
+          src={LOGO_MAIN} 
+          alt="" 
+          aria-hidden 
+          className="absolute pointer-events-none select-none" 
+          style={{ 
+            top: '50%', 
+            left: '75%', 
+            transform: 'translate(-50%, -50%)', 
+            width: '180vw', 
+            minWidth: '1500px', 
+            opacity: 0.07 
+          }} 
         />
 
-        <div className="max-w-7xl mx-auto">
+        <div className="max-w-7xl mx-auto relative z-10">
           <p
             className="text-xs tracking-[0.4em] uppercase mb-3"
             style={{
