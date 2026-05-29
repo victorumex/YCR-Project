@@ -21,9 +21,8 @@ export default function Home() {
       try {
         setIsLoading(true);
         const { data, error } = await supabase
-          .from('products')
+          .from('featured_displays')
           .select('*')
-          .eq('featured', true)
           .order('created_at', { ascending: false })
           .limit(6);
 
@@ -154,7 +153,7 @@ export default function Home() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
               {featured.map((product, i) => (
-                <ProductCard key={product.id} product={product} index={i} />
+                <ProductCard key={product.id} product={product} index={i} isFeatured={true} />
               ))}
             </div>
           </div>
